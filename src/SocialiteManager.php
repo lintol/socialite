@@ -6,6 +6,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Illuminate\Support\Manager;
+use Laravel\Socialite\Two\CkanProvider;
 use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\GoogleProvider;
 use Laravel\Socialite\One\TwitterProvider;
@@ -25,6 +26,20 @@ class SocialiteManager extends Manager implements Contracts\Factory
     public function with($driver)
     {
         return $this->driver($driver);
+    }
+
+    /**
+     * Create an instance of the specified driver.
+     *
+     * @return \Laravel\Socialite\Two\AbstractProvider
+     */
+    protected function createCkanDriver()
+    {
+        $config = $this->app['config']['services.ckan'];
+
+        return $this->buildProvider(
+            CkanProvider::class, $config
+        );
     }
 
     /**
