@@ -16,6 +16,8 @@ class CkanProvider extends AbstractProvider implements ProviderInterface
 
     protected $rootUrl = null;
 
+    protected $defaultRequestOptions = [];
+
     public function getRedirectUrl()
     {
         return $this->redirectUrl;
@@ -94,16 +96,29 @@ class CkanProvider extends AbstractProvider implements ProviderInterface
     }
 
     /**
+     * Set the default options for an HTTP request.
+     *
+     * @params array
+     */
+    public function setDefaultRequestOptions(array $requestOptions)
+    {
+        $this->defaultRequestOptions = $requestOptions;
+    }
+
+    /**
      * Get the default options for an HTTP request.
      *
      * @return array
      */
     protected function getRequestOptions()
     {
-        return [
-            'headers' => [
-                'Accept' => 'application/json',
-            ],
-        ];
+        return array_merge(
+            $this->defaultRequestOptions,
+            [
+                'headers' => [
+                    'Accept' => 'application/json',
+                ]
+            ]
+        );
     }
 }
