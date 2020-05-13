@@ -1,6 +1,39 @@
 # Release Notes
 
-## [Unreleased](https://github.com/laravel/socialite/compare/v4.1.3...master)
+## [Unreleased](https://github.com/laravel/socialite/compare/v4.3.2...master)
+
+
+## [v4.3.2 (2020-02-04)](https://github.com/laravel/socialite/compare/v4.3.1...v4.3.2)
+
+### Fixed
+- Use Authorization header for Github provider ([#430](https://github.com/laravel/socialite/pull/430))
+
+
+## [v4.3.1 (2019-11-26)](https://github.com/laravel/socialite/compare/v4.3.0...v4.3.1)
+
+### Fixed
+- Override `SocialiteServiceProvider::isDeferred()` to mark as deferred ([#412](https://github.com/laravel/socialite/pull/412))
+
+
+## [v4.3.0 (2019-11-19)](https://github.com/laravel/socialite/compare/v4.2.0...v4.3.0)
+
+### Added
+- Allow to manually set desired Facebook graph version ([#408](https://github.com/laravel/socialite/pull/408))
+
+### Changed
+- Change default Facebook graph version to 3.3 ([#408](https://github.com/laravel/socialite/pull/408))
+
+
+## [v4.2.0 (2019-09-03)](https://github.com/laravel/socialite/compare/v4.1.4...v4.2.0)
+
+### Added
+- Laravel 6.0 support ([#390](https://github.com/laravel/socialite/pull/390))
+
+
+## [v4.1.4 (2019-07-30)](https://github.com/laravel/socialite/compare/v4.1.3...v4.1.4)
+
+### Changed
+- Updated version constraints for Laravel 6.0 ([3fe71f1](https://github.com/laravel/socialite/commit/3fe71f1c593967e5b6046977b310e287f40ee92d))
 
 
 ## [v4.1.3 (2019-04-02)](https://github.com/laravel/socialite/compare/v4.1.2...v4.1.3)

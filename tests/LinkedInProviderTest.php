@@ -2,17 +2,17 @@
 
 namespace Laravel\Socialite\Tests;
 
-use Mockery as m;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Laravel\Socialite\Two\LinkedInProvider;
 use Laravel\Socialite\Two\User;
+use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
-use Laravel\Socialite\Two\LinkedInProvider;
 
 class LinkedInProviderTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -56,7 +56,7 @@ class LinkedInProviderTest extends TestCase
         $user = $provider->user();
 
         $this->assertInstanceOf(User::class, $user);
-        $this->assertEquals($userId, $user->getId());
-        $this->assertEquals(null, $user->getEmail());
+        $this->assertSame($userId, $user->getId());
+        $this->assertNull($user->getEmail());
     }
 }

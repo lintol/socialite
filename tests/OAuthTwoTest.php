@@ -2,22 +2,23 @@
 
 namespace Laravel\Socialite\Tests;
 
-use stdClass;
-use Mockery as m;
-use Illuminate\Http\Request;
 use GuzzleHttp\ClientInterface;
-use Laravel\Socialite\Two\User;
-use PHPUnit\Framework\TestCase;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Session\Session;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Laravel\Socialite\Tests\Fixtures\FacebookTestProviderStub;
 use Laravel\Socialite\Tests\Fixtures\OAuthTwoTestProviderStub;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Laravel\Socialite\Two\InvalidStateException;
+use Laravel\Socialite\Two\User;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
+use stdClass;
 use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class OAuthTwoTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -66,7 +67,7 @@ class OAuthTwoTest extends TestCase
         $provider = new FacebookTestProviderStub($request, 'client_id', 'client_secret', 'redirect_uri');
         $provider->http = m::mock(stdClass::class);
         $postKey = (version_compare(ClientInterface::VERSION, '6') === 1) ? 'form_params' : 'body';
-        $provider->http->shouldReceive('post')->once()->with('https://graph.facebook.com/v3.0/oauth/access_token', [
+        $provider->http->shouldReceive('post')->once()->with('https://graph.facebook.com/v3.3/oauth/access_token', [
             $postKey => ['client_id' => 'client_id', 'client_secret' => 'client_secret', 'code' => 'code', 'redirect_uri' => 'redirect_uri'],
         ])->andReturn($response = m::mock(stdClass::class));
         $response->shouldReceive('getBody')->once()->andReturn(json_encode(['access_token' => 'access_token', 'expires' => 5183085]));
@@ -76,14 +77,13 @@ class OAuthTwoTest extends TestCase
         $this->assertSame('foo', $user->id);
         $this->assertSame('access_token', $user->token);
         $this->assertNull($user->refreshToken);
-        $this->assertEquals(5183085, $user->expiresIn);
+        $this->assertSame(5183085, $user->expiresIn);
     }
 
-    /**
-     * @expectedException \Laravel\Socialite\Two\InvalidStateException
-     */
     public function testExceptionIsThrownIfStateIsInvalid()
     {
+        $this->expectException(InvalidStateException::class);
+
         $request = Request::create('foo', 'GET', ['state' => str_repeat('B', 40), 'code' => 'code']);
         $request->setLaravelSession($session = m::mock(Session::class));
         $session->shouldReceive('pull')->once()->with('state')->andReturn(str_repeat('A', 40));
@@ -91,11 +91,10 @@ class OAuthTwoTest extends TestCase
         $provider->user();
     }
 
-    /**
-     * @expectedException \Laravel\Socialite\Two\InvalidStateException
-     */
     public function testExceptionIsThrownIfStateIsNotSet()
     {
+        $this->expectException(InvalidStateException::class);
+
         $request = Request::create('foo', 'GET', ['state' => 'state', 'code' => 'code']);
         $request->setLaravelSession($session = m::mock(Session::class));
         $session->shouldReceive('pull')->once()->with('state');
